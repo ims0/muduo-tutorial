@@ -12,6 +12,11 @@ OUTDIR_DIR=$CUR_DIR/output
 BUILD_TYPE=${BUILD_TYPE:-debug}
 INSTALL_DIR=${INSTALL_DIR:-../${BUILD_TYPE}-install-cpp11}
 CXX=${CXX:-g++}
+
+if test  ! -d  $SOURCE_DIR/muduo; then
+    git submodule update --init
+fi
+
 set +x
 ln -sf $BUILD_DIR/$BUILD_TYPE-cpp11/compile_commands.json
 
