@@ -13,19 +13,11 @@ BUILD_TYPE=${BUILD_TYPE:-debug}
 INSTALL_DIR=${INSTALL_DIR:-../${BUILD_TYPE}-install-cpp11}
 CXX=${CXX:-g++}
 
-<<<<<<< HEAD
 if [ ! "$(ls -A $SOURCE_DIR/muduo)" ]; then
     set -x
     git submodule update --init
 fi
 
-=======
-if test  ! -d  $SOURCE_DIR/muduo; then
-    git submodule update --init
-fi
-
-set +x
->>>>>>> 8b33e88d6fa51f03dc7d5bb27244f1edaf496e2f
 ln -sf $BUILD_DIR/$BUILD_TYPE-cpp11/compile_commands.json
 
 rm -rf $OUTDIR_DIR
