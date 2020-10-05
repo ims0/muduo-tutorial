@@ -4,7 +4,7 @@
 ##########################################################
 #!/bin/bash
 
-set -x -e
+set -e
 CUR_DIR=$(cd `dirname $0`;pwd)
 SOURCE_DIR=$CUR_DIR/cmake-submodule
 BUILD_DIR=${BUILD_DIR:-$CUR_DIR/build}
@@ -12,7 +12,12 @@ OUTDIR_DIR=$CUR_DIR/output
 BUILD_TYPE=${BUILD_TYPE:-debug}
 INSTALL_DIR=${INSTALL_DIR:-../${BUILD_TYPE}-install-cpp11}
 CXX=${CXX:-g++}
-set +x
+
+if [ ! "$(ls -A $SOURCE_DIR/muduo)" ]; then
+    set -x
+    git submodule update --init
+fi
+
 ln -sf $BUILD_DIR/$BUILD_TYPE-cpp11/compile_commands.json
 
 rm -rf $OUTDIR_DIR
