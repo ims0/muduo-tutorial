@@ -1,3 +1,6 @@
 build/
 output/
+cscope.*
+.clangd
+.cs.files
 compile_commands.json
