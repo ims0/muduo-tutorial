@@ -57,7 +57,8 @@ std::unique_ptr<muduo::AsyncLogging> g_asyncLog;
 void asyncOutput(const char *msg, int len) { g_asyncLog->append(msg, len); }
 
 void setLogging(const char *argv0) {
-  muduo::Logger::setOutput(asyncOutput);
+  muduo::Logger::setOutput(asyncOutput);//call by Logger::~Logger()
+
   char name[256];
   strncpy(name, argv0, 256);
   g_asyncLog.reset(new muduo::AsyncLogging(::basename(name), kRollSize));
