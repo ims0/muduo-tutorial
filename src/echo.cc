@@ -18,7 +18,7 @@ using namespace muduo::net;
 class EchoServer {
 public:
   EchoServer(EventLoop *loop, const InetAddress &listenAddr)
-      : loop_(loop), server_(loop, listenAddr, "EchoServer") {
+      : server_(loop, listenAddr, "EchoServer") {
     server_.setConnectionCallback(
         std::bind(&EchoServer::onConnection, this, _1));
     server_.setMessageCallback(
@@ -32,7 +32,6 @@ private:
 
   void onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp time);
 
-  EventLoop *loop_;
   TcpServer server_;
 };
 
@@ -50,19 +49,16 @@ void EchoServer::onMessage(const TcpConnectionPtr &conn, Buffer *buf,
   conn->send(msg);
 }
 
-int kRollSize = 500 * 1000 * 1000;
-
 std::unique_ptr<muduo::AsyncLogging> g_asyncLog;
 
-void asyncOutput(const char *msg, int len) { g_asyncLog->append(msg, len); }
-
 void setLogging(const char *argv0) {
-  muduo::Logger::setOutput(asyncOutput);//call by Logger::~Logger()
-
   char name[256];
   strncpy(name, argv0, 256);
+  int kRollSize = 500 * 1000 * 1000;
   g_asyncLog.reset(new muduo::AsyncLogging(::basename(name), kRollSize));
   g_asyncLog->start();
+  muduo::Logger::setOutput(
+      [](const char *msg, int len) { g_asyncLog->append(msg, len); });
 }
 
 int main(int argc, char *argv[]) {
